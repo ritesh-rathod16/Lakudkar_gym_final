@@ -1,0 +1,1855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lakudkar Gym - Transform Your Fitness Journey</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        /* Base Styles */
+        :root {
+            --primary: #121212;
+            --secondary: #1a1a1a;
+            --accent: #d4af37;
+            --text: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --card-bg: rgba(30, 30, 30, 0.8);
+            --hover-bg: rgba(60, 60, 60, 0.6);
+            --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: url('https://i.pinimg.com/736x/de/8f/57/de8f579651b2e0a6cddbd359182f95ad.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--text);
+            position: relative;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: -1;
+        }
+
+        /* Welcome Animation */
+        #welcome-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 1s ease-out;
+        }
+
+        .logo-animation {
+            width: 200px;
+            height: 200px;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .logo-animation img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 0 10px var(--accent));
+            animation: pulse 2s infinite, float 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            opacity: 0;
+            animation: sparkle 1.5s infinite;
+        }
+
+        @keyframes sparkle {
+            0% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0); }
+        }
+
+        #welcome-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--accent);
+            text-align: center;
+            margin-top: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 1s ease-out 0.5s forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header */
+        header {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-container img {
+            height: 50px;
+            width: auto;
+            filter: brightness(1.2);
+            transition: var(--transition);
+        }
+
+        .logo-container img:hover {
+            transform: rotate(5deg) scale(1.05);
+        }
+
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent);
+            letter-spacing: 1px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            transition: var(--transition);
+            position: relative;
+            padding: 5px 0;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent);
+            transition: var(--transition);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--accent);
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            animation: neonGlow 2s infinite alternate;
+        }
+
+        @keyframes neonGlow {
+            from { text-shadow: 0 0 5px var(--accent), 0 0 10px rgba(212, 175, 55, 0.5); }
+            to { text-shadow: 0 0 10px var(--accent), 0 0 20px rgba(212, 175, 55, 0.7), 0 0 30px rgba(212, 175, 55, 0.3); }
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            color: var(--text);
+        }
+
+        .hero-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent), #f1c40f);
+            color: var(--primary);
+            padding: 15px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
+        }
+
+        .hero-images {
+            margin-top: 50px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .hero-images img {
+            max-width: 80%;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: var(--transition);
+        }
+
+        .hero-images img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+        }
+
+        /* 3D Elements */
+        #dumbbell-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Membership Plans */
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            text-align: center;
+            margin: 80px 0 40px;
+            color: var(--accent);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 3px;
+            background-color: var(--accent);
+            margin: 15px auto;
+        }
+
+        .membership-cards {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            padding: 0 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .membership-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            width: 350px;
+            transition: var(--transition);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .membership-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: var(--transition);
+            opacity: 0;
+        }
+
+        .membership-card:hover {
+            transform: translateY(-10px) rotateY(5deg) rotateX(5deg);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .membership-card:hover::before {
+            animation: shine 1.5s;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); opacity: 0; }
+            50% { opacity: 0.5; }
+            100% { transform: translateX(100%) rotate(45deg); opacity: 0; }
+        }
+
+        .membership-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        .membership-card .price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .membership-card ul {
+            list-style: none;
+            margin-bottom: 25px;
+        }
+
+        .membership-card li {
+            margin-bottom: 10px;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .membership-card li::before {
+            content: '✓';
+            color: var(--accent);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .card-btn {
+            display: block;
+            text-align: center;
+            background: linear-gradient(135deg, var(--accent), #f1c40f);
+            color: var(--primary);
+            padding: 12px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .card-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+        }
+
+        /* Diet & Workout Plans */
+        .plans-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .plan-cards {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .plan-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: var(--transition);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 580px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media (min-width: 992px) {
+            .plan-card {
+                flex-direction: row;
+                height: 300px;
+            }
+            
+            .plan-card.reverse {
+                flex-direction: row-reverse;
+            }
+        }
+
+        .plan-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .plan-img {
+            flex: 1;
+            min-height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .plan-content {
+            flex: 1;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .plan-content h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: var(--accent);
+        }
+
+        .plan-content p {
+            margin-bottom: 15px;
+            color: var(--text-secondary);
+        }
+
+        .view-plan-btn {
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition);
+            align-self: flex-start;
+            margin-top: 15px;
+        }
+
+        .view-plan-btn:hover {
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            overflow-y: auto;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: var(--secondary);
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 800px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .modal-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://i.pinimg.com/474x/65/1f/00/651f00fd2fdf4d3774ce93711ae8b866.jpg') no-repeat center center;
+            background-size: cover;
+            opacity: 0.2;
+            z-index: -1;
+            border-radius: 15px;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            color: var(--text);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .close-modal:hover {
+            color: var(--accent);
+            transform: rotate(90deg);
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .plan-day {
+            margin-bottom: 25px;
+            background: rgba(30, 30, 30, 0.7);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .plan-day h4 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--accent);
+        }
+
+        .plan-day ul {
+            list-style: none;
+        }
+
+        .plan-day li {
+            margin-bottom: 8px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .plan-day li::before {
+            content: '•';
+            color: var(--accent);
+            position: absolute;
+            left: 10px;
+            font-weight: bold;
+        }
+
+        /* Location Section */
+        .location-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px 50px;
+        }
+
+        .location-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .map-container {
+            flex: 1;
+            min-width: 300px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 400px;
+            border: none;
+        }
+
+        .hours-container {
+            flex: 1;
+            min-width: 300px;
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .hours-container h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+
+        .hours-list {
+            list-style: none;
+        }
+
+        .hours-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .hours-list li:last-child {
+            border-bottom: none;
+        }
+
+        .parking-img {
+            width: 100%;
+            max-width: 800px;
+            margin: 30px auto 0;
+            display: block;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Contact Form */
+        .contact-section {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px 80px;
+        }
+
+        .contact-form {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-top: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: 'Montserrat', sans-serif;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--accent), #f1c40f);
+            color: var(--primary);
+            padding: 12px 30px;
+            border-radius: 30px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: block;
+            margin: 30px auto 0;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+        }
+
+        /* Footer */
+        footer {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 50px 0 20px;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 40px;
+        }
+
+        .footer-col {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .footer-col h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col li {
+            margin-bottom: 10px;
+        }
+
+        .footer-col a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-col a:hover {
+            color: var(--accent);
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-links a {
+            color: var(--text);
+            font-size: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+            
+            .membership-cards {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .membership-card {
+                width: 100%;
+                max-width: 400px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+                position: absolute;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background: rgba(0, 0, 0, 0.9);
+                flex-direction: column;
+                align-items: center;
+                padding: 20px 0;
+                gap: 15px;
+            }
+            
+            nav ul.show {
+                display: flex;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .plan-card, .plan-card.reverse {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .plan-img {
+                min-height: 250px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-btn {
+                padding: 12px 25px;
+                font-size: 1rem;
+            }
+            
+            .logo-text {
+                font-size: 1.5rem;
+            }
+            
+            .logo-container img {
+                height: 40px;
+            }
+            
+            .modal-content {
+                padding: 20px;
+                margin: 20px auto;
+            }
+        }
+
+        /* Particle Animation */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Chatbot */
+        .chatbot-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 999;
+        }
+
+        .chatbot-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #f1c40f);
+            color: var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: var(--transition);
+            border: none;
+        }
+
+        .chatbot-btn:hover {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .chatbot-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 300px;
+            background: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            display: none;
+            transform-origin: bottom right;
+            animation: scaleUp 0.3s ease-out;
+        }
+
+        @keyframes scaleUp {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .chatbot-header {
+            background: var(--accent);
+            color: var(--primary);
+            padding: 15px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-chatbot {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .chatbot-messages {
+            height: 300px;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .bot-message, .user-message {
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            border-radius: 15px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        .bot-message {
+            background: rgba(255, 255, 255, 0.1);
+            border-top-left-radius: 5px;
+            align-self: flex-start;
+        }
+
+        .user-message {
+            background: var(--accent);
+            color: var(--primary);
+            border-top-right-radius: 5px;
+            margin-left: auto;
+        }
+
+        .chatbot-input {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chatbot-input input {
+            flex: 1;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            color: var(--text);
+            margin-right: 10px;
+        }
+
+        .chatbot-input button {
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        /* Scroll Animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Welcome Animation -->
+    <div id="welcome-screen">
+        <div class="logo-animation">
+            <img src="https://sigmawire.net/i/04/BDFtW0.jpg" alt="Lakudkar Gym Logo">
+            <div class="sparkle" style="top: 20%; left: 30%; animation-delay: 0.2s;"></div>
+            <div class="sparkle" style="top: 70%; left: 20%; animation-delay: 0.4s;"></div>
+            <div class="sparkle" style="top: 40%; left: 70%; animation-delay: 0.6s;"></div>
+            <div class="sparkle" style="top: 80%; left: 60%; animation-delay: 0.8s;"></div>
+        </div>
+        <div id="welcome-text">Welcome to Lakudkar Gym</div>
+    </div>
+
+    <!-- Particles Background -->
+    <div id="particles-js"></div>
+
+    <!-- 3D Dumbbell Animation -->
+    <div id="dumbbell-container"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo-container">
+                <img src="https://sigmawire.net/i/04/BDFtW0.jpg" alt="Lakudkar Gym Logo">
+                <div class="logo-text">Lakudkar Gym</div>
+            </div>
+            <button class="mobile-menu-btn" id="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav>
+                <ul id="nav-menu">
+                    <li><a href="#hero">Home</a></li>
+                    <li><a href="#membership">Membership Plans</a></li>
+                    <li><a href="#location">Location</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-content fade-in">
+            <h1>Transform Your Fitness Journey Today!</h1>
+            <p>Personalized Training • Expert Coaches • Results Guaranteed</p>
+            <a href="#membership" class="hero-btn">Join Now</a>
+        </div>
+        <div class="hero-images">
+            <img src="https://i.pinimg.com/736x/f5/51/48/f55148ad2ef92de8597008b60bcd29a8.jpg" alt="Gym Interior" class="fade-in" style="animation-delay: 0.3s;">
+            <img src="https://i.pinimg.com/736x/f7/b0/5d/f7b05d5bb3f523a73aa01efeed5be53d.jpg" alt="Gym Equipment" class="fade-in" style="animation-delay: 0.6s;">
+        </div>
+    </section>
+
+    <!-- Membership Plans -->
+    <section id="membership">
+        <h2 class="section-title fade-in">Membership Plans</h2>
+        <div class="membership-cards">
+            <div class="membership-card fade-in">
+                <h3>Gym Membership</h3>
+                <div class="price">₹1,500/-</div>
+                <ul>
+                    <li>🏋️‍♂️ STRENGTH TRAINING</li>
+                    <li>⚡ FUNCTIONAL & CROSSFIT TRAINING</li>
+                    <li>📊 CUSTOMIZED WORKOUT PLANNING</li>
+                    <li>🍎 CUSTOMIZED DIET & NUTRITION</li>
+                </ul>
+                <button class="card-btn">Join Now</button>
+            </div>
+            <div class="membership-card fade-in" style="animation-delay: 0.2s;">
+                <h3>Dance Class</h3>
+                <div class="price">₹1,500/-</div>
+                <ul>
+                    <li>🕺 No experience needed</li>
+                    <li>🌍 Learn global dance styles</li>
+                    <li>💃 Feel the rhythm</li>
+                    <li>💪 Full-body workout</li>
+                    <li>😊 Instant mood booster</li>
+                    <li>👯 Friendly community</li>
+                </ul>
+                <button class="card-btn">Join Now</button>
+            </div>
+            <div class="membership-card fade-in" style="animation-delay: 0.4s;">
+                <h3>Calisthenics</h3>
+                <div class="price">₹1,500/-</div>
+                <ul>
+                    <li>💪 Bodyweight Mastery</li>
+                    <li>🔥 No Gym? No Problem!</li>
+                    <li>✔ Full-Body Strength</li>
+                    <li>✔ Core & Mobility</li>
+                    <li>✔ Explosive Power</li>
+                    <li>✔ Progressive Training</li>
+                </ul>
+                <button class="card-btn">Join Now</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Diet Plan -->
+    <section class="plans-section">
+        <h2 class="section-title fade-in">Diet Plan</h2>
+        <div class="plan-cards">
+            <div class="plan-card fade-in">
+                <div class="plan-img" style="background-image: url('https://i.pinimg.com/474x/6c/e3/b2/6ce3b2be792cdd262d3bc338f4268687.jpg');"></div>
+                <div class="plan-content">
+                    <h3>Daily Macros (Indian Foods)</h3>
+                    <p>💪 Protein: 1.6-2.2g/kg (Eggs 🥚, Chicken 🍗, Paneer 🧀, Dal 🌱)</p>
+                    <p>⚡ Carbs: 3-5g/kg (Brown Rice 🍚, Roti 🫓, Oats 🥣)</p>
+                    <p>🫒 Fats: 0.8-1g/kg (Ghee 🧈, Nuts 🥜, Coconut 🥥)</p>
+                    <button class="view-plan-btn" onclick="openModal('diet-modal')">View Full 7-Day Plan</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Workout Routine -->
+    <section class="plans-section">
+        <h2 class="section-title fade-in">Daily Routine Workout</h2>
+        <div class="plan-cards">
+            <div class="plan-card reverse fade-in">
+                <div class="plan-img" style="background-image: url('https://i.pinimg.com/474x/b0/3c/e5/b03ce54af40c1ff0682db0e0221737d1.jpg');"></div>
+                <div class="plan-content">
+                    <h3>6-Day Gym Workout Split</h3>
+                    <p>🏋️‍♂️ Gym Essentials: Dumbbells, Barbell, Treadmill, Resistance Bands</p>
+                    <p>💪 Popular Workouts: Chest Day, Leg Day, Arm Day, HIIT, Yoga</p>
+                    <p>🍏 Gym Nutrition: Pre-Workout, Protein Shake, Healthy Meal Prep</p>
+                    <button class="view-plan-btn" onclick="openModal('gym-modal')">View 6-Day Gym Workout Split</button>
+                </div>
+            </div>
+            <div class="plan-card fade-in" style="animation-delay: 0.2s;">
+                <div class="plan-img" style="background-image: url('https://i.pinimg.com/736x/f4/81/51/f48151613d6c1b329c50e38ea78693f0.jpg');"></div>
+                <div class="plan-content">
+                    <h3>6-Day Calisthenics Plan</h3>
+                    <p>🤸‍♂️ Skill-Based Moves: Muscle-Up, Front Lever, Planche, Human Flag</p>
+                    <p>🧘‍♂️ Cool Down: Static Stretching, Deep Breathing, Hydration</p>
+                    <p>💡 Pro Tips: Consistency > Intensity, Form First, Rest & Recovery</p>
+                    <button class="view-plan-btn" onclick="openModal('calisthenics-modal')">View 6-Day Calisthenics Plan</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Location Section -->
+    <section class="location-section" id="location">
+        <h2 class="section-title fade-in">Our Location</h2>
+        <div class="location-container">
+            <div class="map-container fade-in">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3635.570712666092!2d79.07413837515436!3d21.07967418058246!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bd4bf1b58fb6519%3A0x6cbe7ba3e9ac2854!2sLakudkar&#39;s%20Fitness%20Gym!5e1!3m2!1sen!2sin!4v1743186760740!5m2!1sen!2sin" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+            <div class="hours-container fade-in" style="animation-delay: 0.2s;">
+                <h3>Operating Hours</h3>
+                <ul class="hours-list">
+                    <li><span>Monday - Saturday</span><span>6:00 AM - 10:00 PM</span></li>
+                    <li><span>Sunday</span><span>Closed</span></li>
+                </ul>
+                <h3 style="margin-top: 30px;">Parking Info</h3>
+                <p>Ample parking space available in front of the gym premises.</p>
+            </div>
+        </div>
+        <img src="https://tse1.mm.bing.net/th?id=OIP.Oke_TneWMJ1b0_M4kWrSKwHaFj&pid=Api&P=0&h=180" alt="Parking Area" class="parking-img fade-in" style="animation-delay: 0.4s;">
+    </section>
+
+    <!-- Contact Form -->
+    <section class="contact-section">
+        <h2 class="section-title fade-in">Contact Us</h2>
+        <form class="contact-form fade-in" id="contact-form">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone</label>
+                <input type="tel" id="phone" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" class="form-control" required></textarea>
+            </div>
+            <button type="submit" class="submit-btn">Send Message</button>
+        </form>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>Lakudkar Gym</h3>
+                <p>Transform your fitness journey with our expert trainers and state-of-the-art facilities.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#hero">Home</a></li>
+                    <li><a href="#membership">Membership</a></li>
+                    <li><a href="#location">Location</a></li>
+                    <li><a href="#">Trainers</a></li>
+                    <li><a href="#">Gallery</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Contact Info</h3>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> Gym Address, City</li>
+                    <li><i class="fas fa-phone"></i> +91 1234567890</li>
+                    <li><i class="fas fa-envelope"></i> info@lakudkargym.com</li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2023 Lakudkar Gym. All Rights Reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms & Conditions</a>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    <div class="modal" id="diet-modal">
+        <div class="modal-content">
+            <div class="modal-bg"></div>
+            <span class="close-modal" onclick="closeModal('diet-modal')">&times;</span>
+            <h3 class="modal-title">7-Day Diet Plan</h3>
+            <div class="plan-day">
+                <h4>Day 1 🏋️‍♂️ (Strength Training - High Protein)</h4>
+                <ul>
+                    <li>🌅 Pre-Workout: Banana 🍌 + Peanut Butter 🥜 + Milk 🥛</li>
+                    <li>🏋️‍♂️ Post-Workout: Roti 🫓 + Chicken Curry 🍗 + Dal 🌱 + Cucumber Salad 🥒</li>
+                    <li>☕ Snack: Sprout Chaat 🌱 + Almonds 🥜</li>
+                    <li>🌙 Dinner: Brown Rice 🍚 + Fish Curry 🐟 + Bhindi Sabzi 🥗</li>
+                </ul>
+            </div>
+            <div class="plan-day">
+                <h4>Day 2 🏃‍♂️ (HIIT - Moderate Carb)</h4>
+                <ul>
+                    <li>🌅 Pre-Workout: Poha 🍚 + Boiled Egg 🥚</li>
+                    <li>🏃‍♂️ Post-Workout: Quinoa 🍛 + Moong Dal 🌱 + Curd 🥄</li>
+                    <li>☕ Snack: Greek Yogurt 🥣 + Chia Seeds ✨</li>
+                    <li>🌙 Dinner: Jowar Roti 🫓 + Palak Paneer 🧀 + Sprouts 🌱</li>
+                </ul>
+            </div>
+            <div class="plan-day">
+                <h4>Day 3 🦵 (Leg Day - High Energy)</h4>
+                <ul>
+                    <li>🌅 Pre-Workout: Oats 🥣 + Whey 💊 + Dates 🍇</li>
+                    <li>🦵 Post-Workout: Rice 🍚 + Mutton Curry 🍖 + Beetroot Salad 🥗</li>
+                    <li>☕ Snack: Chana Chaat 🌱 + Green Chutney 🍃</li>
+                    <li>🌙 Dinner: Bajra Roti 🫓 + Dal Tadka 🌱 + Mushrooms 🍄</li>
+                </ul>
+            </div>
+            <div class="plan-day">
+                <h4>Day 4 💪 (Upper Body - Balanced)</h4>
+                <ul>
+                    <li>🌅 Pre-Workout: Upma 🍛 + Buttermilk 🥛</li>
+                    <li>💪 Post-Workout: Roti 🫓 + Egg Bhurji 🍳 + Curd 🥄</li>
+                    <li>☕ Snack: Makhana 🍿 + Ghee 🧈</li>
+                    <li>🌙 Dinner: Khichdi 🍚 + Kadhi 🥣</li>
+                </ul>
+            </div>
+            <div class="plan-day">
+                <h4>Day 5 🚴 (Endurance - Carb Cycling)</h4>
+                <ul>
+                    <li>🌅 Pre-Workout: Idli 🍘 + Sambar 🍛</li>
+                    <li>🚴 Post-Workout: Brown Rice 🍚 + Grilled Fish 🐟 + Lauki Sabzi 🥗</li>
+                    <li>☕ Snack: Fruit Salad 🍉 + Walnuts 🥜</li>
+                    <li>🌙 Dinner: Missi Roti 🫓 + Dal 🌱 + Bhindi Sabzi 🥗</li>
+                </ul>
+            </div>
+            <div class="plan-day">
+                <h4>Day 6 🧘 (Active Recovery - Low Carb)</h4>
+                <ul>
+                    <li>🌅 Breakfast: Egg Whites 🥚 + Spinach Omelet 🍳</li>
+                    <li>🍽️ Lunch: Quinoa 🍛 + Chana Masala 🌱 + Cucumber Raita 🥒</li>
+                    <li>☕ Snack: Coconut Water 🥥 + Pumpkin Seeds 🎃</li>
+                    <li>🌙 Dinner: Tofu 🧈 + Mushroom Soup 🍄</li>
+                </ul>
+            </div>
+            <div class="plan-day">
+                <h4>Day 7 🛌 (Rest Day - Flexible)</h4>
+                <ul>
+                    <li>🍳 Brunch: Dosa 🍘 + Sambar 🍛 + Flaxseed Chutney ✨</li>
+                    <li>☕ Snack: Lassi 🥛 + Sunflower Seeds 🌻</li>
+                    <li>Muscle Gain 💪: Add ghee 🧈 or extra eggs 🥚</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="gym-modal">
+        <div class="modal-content">
+            <div class="modal-bg"></div>
+            <span class="close-modal" onclick="closeModal('gym-modal')">&times;</span>
+            <h3 class="modal-title">6-Day Gym Workout Split</h3>
+            <div class="plan-day">
+                <h4>Day 1️⃣ (Monday): Chest & Triceps</h4>
+                <ul>
+                    <li>Flat Bench Press – 4x6-8 🏋️‍♂️</li>
+                    <li>Incline Dumbbell Press – 3x8-10 🏋️‍♀️</li>
+                    <li>Cable Flys – 3x12 ✨</li>
+                    <li>Triceps Dips – 3xMAX 💪</li>
+                    <li>Skull Crushers – 3x10-12 🦾</li>
+                    <li>(Finish: 10 min incline treadmill walk 🚶‍♂️)</li>
+                </ul>
+            </div>
+            <div class="plan-day">
+                <h4>Day 2️⃣ (Tuesday): Back & Biceps</h4>
+                <ul>
+                    <li>Pull-Ups – 4x6-8 (add weight if advanced) 🏋️‍♂️</li>
+                    <li>Barbell Rows – 3x8-10 🏋️‍♀️</li>
+                    <li>Lat Pulldown – 3x10-12 🔄</li>
+                    <li>Deadlifts – 3x5 (heavy!) ⚡</li>
+                    <li>Hammer Curls – 3x12 💥</li>
+                    <li>(Stretch: 5 min lats/biceps 🧘)</li>
+                </ul>
+            </div>
+            <div class="plan-day">
+                <h4>Day 3️⃣ (Wednesday): Legs (Quads Focus)</h4>
+                <ul>
+                    <li>Squats – 4x6-8 🦵</li>
+                    <li>Bulgarian Split Squats – 3x8/leg 🏋️‍♀️</li>
+                    <li>Leg Press – 3x10-12 🚂</li>
+                    <li>Leg Extensions – 3x15 (slow!) 🐢</li>
+                    <li>Calf Raises – 4x15 👟</li>
+                    <li>(Cool down: 5 min bike 🚴‍♂️)</li>
+                </ul>
+            </div>
+            <div class="plan-day">
+                <h4>Day 4️⃣ (Thursday): Shoulders & Abs</h4>
+                <ul>
+                    <li>Overhead Press – 4x6-8 🏋️‍♂️</li>
+                    <li>Lateral Raises – 3x12-15 ✈️</li>
+                    <li>Face Pulls – 3x15 🔄</li>
+                    <li>Hanging Leg Raises – 3x12-15 🦵</li>
+                    <li>Russian Twists – 3x20/side 🔄</li>
+                    <li>(Finish: 10 min rowing 🚣‍♂️)</li>
+                </ul>
+            </div>
+            <div class="plan-day">
+                <h4>Day 5️⃣ (Friday): Arms (Hypertrophy)</h4>
+                <ul>
+                    <li>Close-Grip Bench – 3x10-12 🏋️‍♂️</li>
+                    <li>EZ Bar Curls – 3x10-12 💪</li>
+                    <li>Triceps Rope Pushdown – 3x12-15 🦾</li>
+                    <li>Preacher Curls – 3x12 🔥</li>
+                    <li>(Superset biceps/triceps for pump! 💥)</li>
+                </ul>
+            </div>
+            <div class="plan-day">
+                <h4>Day 6️⃣ (Saturday): Legs (Hamstrings/Glutes) + HIIT</h4>
+                <ul>
+                    <li>Romanian Deadlifts – 4x8 🏋️‍♀️</li>
+                    <li>Hip Thrusts – 3x10-12 �</li>
+                    <li>Leg Curls – 3x12-15 🦵</li>
+                    <li>Farmer's Walk – 3x30 sec 🚶‍♂️</li>
+                    <li>HIIT Finisher:</li>
+                    <li>30 sec Sprint / 30 sec Walk – 8 rounds ⚡</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="calisthenics-modal">
+        <div class="modal-content">
+            <div class="modal-bg"></div>
+            <span class="close-modal" onclick="closeModal('calisthenics-modal')">&times;</span>
+            <h3 class="modal-title">6-Day Calisthenics Plan</h3>
+            <div class="plan-day">
+                <h4>Day 1️⃣ (Monday): Upper Body Push</h4>
+                <ul>
+                    <li>Push-Ups – 4x12-15 🏋️‍♂️ (slow, full range)</li>
+                    <li>Pike Push-Ups – 3x8-10 ✋ (shoulder focus)</li>
+                    <li>Dips (Parallel Bars/Chair) – 3x8-10 🔄</li>
+                    <li>Handstand Holds – 3x20-30 sec ⏳ (against wall)</li>
+                    <li>Triceps Extensions – 3x10-12 🦾</li>
+                    <li>(Finish: 5 min wrist mobility drills ✋)</li>
+                </ul>
+            </div>
+            <div class="plan-day">
+                <h4>Day 2️⃣ (Tuesday): Upper Body Pull</h4>
+                <ul>
+                    <li>Pull-Ups – 4x6-8 🏋️‍♂️ (strict form)</li>
+                    <li>Bodyweight Rows (Table/TRX) – 3x10-12 🔄</li>
+                    <li>Archer Rows – 3x6/side 🎯 (scaled: feet on ground)</li>
+                    <li>Hanging Leg Raises – 3x12-15 🦵</li>
+                    <li>Plank to Failure – 3xMAX ⏳</li>
+                    <li>(Stretch: 5 min lats & biceps 🧘‍♂️)</li>
+                </ul>
+            </div>
+            <div class="plan-day">
+                <h4>Day 3️⃣ (Wednesday): Legs & Core</h4>
+                <ul>
+                    <li>Pistol Squats – 3x5/side 🦵 (assisted if needed)</li>
+                    <li>Jump Squats – 3x12-15 ⚡</li>
+                    <li>Nordic Hamstring Curls – 3x6-8 🏋️‍♀️ (slow negatives)</li>
+                    <li>L-Sit Holds – 3x15-20 sec ⏳ (tucked if advanced)</li>
+                    <li>Dragon Flags – 3x6-8 🐉 (scaled: negatives)</li>
+                    <li>(Cool down: 5 min hip stretches 🧘‍♀️)</li>
+                </ul>
+            </div>
+            <div class="plan-day">
+                <h4>Day 4️⃣ (Thursday): Skill & Mobility</h4>
+                <ul>
+                    <li>Handstand Practice – 10 min ✋ (wall holds/kicks)</li>
+                    <li>Front Lever Progressions – 3x8-10 sec 🏋️‍♂️ (tuck/adv. tuck)</li>
+                    <li>Planche Lean Holds – 3x20-30 sec ⏳</li>
+                    <li>Skin the Cat – 3x5 🔄 (shoulder mobility)</li>
+                    <li>Bridge Holds – 3x20 sec 🌉</li>
+                    <li>(Focus: Form over reps! 👀)</li>
+                </ul>
+            </div>
+            <div class="plan-day">
+                <h4>Day 5️⃣ (Friday): Full Body HIIT</h4>
+                <ul>
+                    <li>Burpees – 4x10 ⚡</li>
+                    <li>Mountain Climbers – 3x20/side 🏔️</li>
+                    <li>Explosive Push-Ups – 3x8 💥</li>
+                    <li>Jump Lunges – 3x12/side 🦵</li>
+                    <li>Plank Jacks – 3x30 sec ⏳</li>
+                    <li>(Finisher: 5 min jump rope 🏃‍♂️)</li>
+                </ul>
+            </div>
+            <div class="plan-day">
+                <h4>Day 6️⃣ (Saturday): Freestyle & Play</h4>
+                <ul>
+                    <li>Muscle-Up Progressions – 10 min 🏋️‍♂️</li>
+                    <li>Human Flag Practice – 3x5 sec/side 🚩</li>
+                    <li>Handstand Walks – 3x10 steps 🚶‍♂️</li>
+                    <li>Parkour Basics – Vaults/Rolling 🏃‍♂️</li>
+                    <li>(Have fun! 😄)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chatbot -->
+    <div class="chatbot-container">
+        <button class="chatbot-btn" id="chatbot-btn">
+            <i class="fas fa-robot"></i>
+        </button>
+        <div class="chatbot-window" id="chatbot-window">
+            <div class="chatbot-header">
+                Gym Assistant
+                <button class="close-chatbot" id="close-chatbot">&times;</button>
+            </div>
+            <div class="chatbot-messages" id="chatbot-messages">
+                <div class="bot-message">Hello! How can I help you today?</div>
+            </div>
+            <div class="chatbot-input">
+                <input type="text" id="chatbot-input" placeholder="Type your message...">
+                <button id="send-message"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Welcome Animation
+        setTimeout(() => {
+            document.getElementById('welcome-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('welcome-screen').style.display = 'none';
+            }, 1000);
+        }, 1500);
+
+        // Mobile Menu Toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            document.getElementById('nav-menu').classList.toggle('show');
+        });
+
+        // Smooth Scrolling for Navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                
+                // Close mobile menu if open
+                if (window.innerWidth <= 768) {
+                    document.getElementById('nav-menu').classList.remove('show');
+                }
+            });
+        });
+
+        // Modal Functions
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Contact Form Submission
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const message = document.getElementById('message').value;
+            
+            // Here you would typically send the data to a server
+            // For demo purposes, we'll just log it and show an alert
+            console.log({name, email, phone, message});
+            
+            // Simulate sending email
+            setTimeout(() => {
+                alert('Thank you for your message! We will contact you soon.');
+                document.getElementById('contact-form').reset();
+            }, 1000);
+        });
+
+        // Chatbot Functionality
+        const chatbotBtn = document.getElementById('chatbot-btn');
+        const chatbotWindow = document.getElementById('chatbot-window');
+        const closeChatbot = document.getElementById('close-chatbot');
+        const sendMessageBtn = document.getElementById('send-message');
+        const chatbotInput = document.getElementById('chatbot-input');
+        const chatbotMessages = document.getElementById('chatbot-messages');
+
+        chatbotBtn.addEventListener('click', function() {
+            chatbotWindow.style.display = chatbotWindow.style.display === 'block' ? 'none' : 'block';
+        });
+
+        closeChatbot.addEventListener('click', function() {
+            chatbotWindow.style.display = 'none';
+        });
+
+        function addBotMessage(text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('bot-message');
+            messageDiv.textContent = text;
+            chatbotMessages.appendChild(messageDiv);
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        }
+
+        function addUserMessage(text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('user-message');
+            messageDiv.textContent = text;
+            chatbotMessages.appendChild(messageDiv);
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        }
+
+        sendMessageBtn.addEventListener('click', function() {
+            const message = chatbotInput.value.trim();
+            if (message) {
+                addUserMessage(message);
+                chatbotInput.value = '';
+                
+                // Bot response
+                setTimeout(() => {
+                    if (message.toLowerCase().includes('membership') || message.toLowerCase().includes('price')) {
+                        addBotMessage('We offer Gym, Dance, and Calisthenics memberships at ₹1,500/- per month each. You can find more details on our Membership Plans section.');
+                    } else if (message.toLowerCase().includes('time') || message.toLowerCase().includes('hour')) {
+                        addBotMessage('We are open Monday to Saturday from 6:00 AM to 10:00 PM. Closed on Sundays.');
+                    } else if (message.toLowerCase().includes('location') || message.toLowerCase().includes('address')) {
+                        addBotMessage('You can find our location on the map in the Location section of our website.');
+                    } else if (message.toLowerCase().includes('trainer') || message.toLowerCase().includes('coach')) {
+                        addBotMessage('We have certified trainers for Gym, Dance, and Calisthenics. They can help you with personalized training plans.');
+                    } else {
+                        addBotMessage('Thank you for your message! For more specific inquiries, please contact us through the contact form or visit our gym.');
+                    }
+                }, 1000);
+            }
+        });
+
+        chatbotInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessageBtn.click();
+            }
+        });
+
+        // Scroll Animation
+        const fadeElements = document.querySelectorAll('.fade-in');
+
+        function checkScroll() {
+            fadeElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (elementTop < windowHeight - 100) {
+                    element.classList.add('visible');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', checkScroll);
+        window.addEventListener('load', checkScroll);
+
+        // Initialize Particles.js
+        particlesJS('particles-js', {
+            "particles": {
+                "number": {
+                    "value": 80,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#d4af37"
+                },
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    },
+                    "polygon": {
+                        "nb_sides": 5
+                    }
+                },
+                "opacity": {
+                    "value": 0.5,
+                    "random": false,
+                    "anim": {
+                        "enable": false,
+                        "speed": 1,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 3,
+                    "random": true,
+                    "anim": {
+                        "enable": false,
+                        "speed": 40,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#d4af37",
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 2,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": false,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "grab"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": {
+                        "distance": 140,
+                        "line_linked": {
+                            "opacity": 1
+                        }
+                    },
+                    "bubble": {
+                        "distance": 400,
+                        "size": 40,
+                        "duration": 2,
+                        "opacity": 8,
+                        "speed": 3
+                    },
+                    "repulse": {
+                        "distance": 200,
+                        "duration": 0.4
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    },
+                    "remove": {
+                        "particles_nb": 2
+                    }
+                }
+            },
+            "retina_detect": true
+        });
+
+        // 3D Dumbbell Animation
+        function init3DDumbbell() {
+            const container = document.getElementById('dumbbell-container');
+            if (!container) return;
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.domElement.style.position = 'absolute';
+            renderer.domElement.style.top = '0';
+            renderer.domElement.style.left = '0';
+            renderer.domElement.style.pointerEvents = 'none';
+            container.appendChild(renderer.domElement);
+
+            // Create dumbbell
+            const barGeometry = new THREE.CylinderGeometry(0.2, 0.2, 3, 32);
+            const weightGeometry = new THREE.SphereGeometry(0.8, 32, 32);
+            
+            const material = new THREE.MeshPhongMaterial({ 
+                color: 0xd4af37,
+                specular: 0x111111,
+                shininess: 30
+            });
+
+            const bar = new THREE.Mesh(barGeometry, material);
+            const weight1 = new THREE.Mesh(weightGeometry, material);
+            const weight2 = new THREE.Mesh(weightGeometry, material);
+            
+            weight1.position.x = -1.5;
+            weight2.position.x = 1.5;
+            
+            const dumbbell = new THREE.Group();
+            dumbbell.add(bar);
+            dumbbell.add(weight1);
+            dumbbell.add(weight2);
+            
+            scene.add(dumbbell);
+
+            // Add lights
+            const ambientLight = new THREE.AmbientLight(0x404040);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+            directionalLight.position.set(1, 1, 1);
+            scene.add(directionalLight);
+
+            camera.position.z = 5;
+            camera.position.y = 2;
+            camera.lookAt(0, 0, 0);
+
+            // Parallax effect
+            let mouseX = 0;
+            let mouseY = 0;
+            
+            document.addEventListener('mousemove', (event) => {
+                mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+                mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+            });
+
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                // Rotate dumbbell
+                dumbbell.rotation.y += 0.005;
+                dumbbell.rotation.x += 0.002;
+                
+                // Parallax effect
+                dumbbell.position.x = mouseX * 0.5;
+                dumbbell.position.y = mouseY * 0.3;
+                
+                renderer.render(scene, camera);
+            }
+
+            // Handle window resize
+            function onWindowResize() {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+
+            window.addEventListener('resize', onWindowResize, false);
+
+            animate();
+        }
+
+        // Initialize 3D dumbbell when Three.js is loaded
+        if (THREE) {
+            init3DDumbbell();
+        } else {
+            window.addEventListener('load', init3DDumbbell);
+        }
+    </script>
+</body>
+</html>
